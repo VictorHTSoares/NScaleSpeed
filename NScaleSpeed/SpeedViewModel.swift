@@ -1,6 +1,12 @@
 import SwiftUI
 import Combine
 
+private class DisplayLinkProxy: NSObject {
+    weak var target: SpeedViewModel?
+    init(_ target: SpeedViewModel) { self.target = target }
+    @objc func tick(_ link: CADisplayLink) { target?.tick(link) }
+}
+
 class SpeedViewModel: ObservableObject {
     @Published var phase: TimerPhase = .idle
     @Published var elapsed: TimeInterval = 0
@@ -35,12 +41,12 @@ class SpeedViewModel: ObservableObject {
         hapticImpact(.medium)
 
         displayLink?.invalidate()
-        let link = CADisplayLink(target: self, selector: #selector(tick))
+        let link = CADisplayLink(target: DisplayLinkProxy(self), selector: #selector(DisplayLinkProxy.tick))
         link.add(to: .main, forMode: .common)
         displayLink = link
     }
 
-    @objc private func tick() {
+    @objc fileprivate func tick(_ link: CADisplayLink) {
         guard let start = startTime else { return }
         elapsed = Date().timeIntervalSince(start)
     }
@@ -51,6 +57,13 @@ class SpeedViewModel: ObservableObject {
         displayLink = nil
         let final = Date().timeIntervalSince(start)
         startTime = nil
+
+        guard final >= 0.05 else {
+            elapsed = 0
+            phase = .idle
+            return
+        }
+
         elapsed = final
         phase = .result
         hapticImpact(.heavy)
