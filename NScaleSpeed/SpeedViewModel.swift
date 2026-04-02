@@ -1,0 +1,126 @@
+import SwiftUI
+import Combine
+
+class SpeedViewModel: ObservableObject {
+    @Published var phase: TimerPhase = .idle
+    @Published var elapsed: TimeInterval = 0
+    @Published var result: SpeedResult?
+    @Published var history: [SpeedResult] = []
+    @Published var selectedScale: ScaleOption = scaleOptions[0]
+    @Published var selectedTrack: TrackOption = scaleOptions[0].tracks[0]
+    @Published var triggerMode: TriggerMode = .classic
+
+    private var startTime: Date?
+    private var displayLink: CADisplayLink?
+
+    var canChangeSettings: Bool {
+        phase == .idle || phase == .result
+    }
+
+    var trackRealM: Double {
+        (selectedTrack.mm / 1000.0) * selectedScale.ratio
+    }
+
+    deinit {
+        displayLink?.invalidate()
+    }
+
+    // MARK: - Timer
+
+    private func startTimer() {
+        startTime = Date()
+        elapsed = 0
+        result = nil
+        phase = .running
+        hapticImpact(.medium)
+
+        displayLink?.invalidate()
+        let link = CADisplayLink(target: self, selector: #selector(tick))
+        link.add(to: .main, forMode: .common)
+        displayLink = link
+    }
+
+    @objc private func tick() {
+        guard let start = startTime else { return }
+        elapsed = Date().timeIntervalSince(start)
+    }
+
+    private func stopTimer() {
+        guard let start = startTime else { return }
+        displayLink?.invalidate()
+        displayLink = nil
+        let final = Date().timeIntervalSince(start)
+        startTime = nil
+        elapsed = final
+        phase = .result
+        hapticImpact(.heavy)
+
+        let r = computeResult(elapsed: final, trackMM: selectedTrack.mm, scaleRatio: selectedScale.ratio)
+        result = r
+        history.insert(r, at: 0)
+        if history.count > 10 { history = Array(history.prefix(10)) }
+    }
+
+    // MARK: - Public Actions
+
+    func reset() {
+        displayLink?.invalidate()
+        displayLink = nil
+        startTime = nil
+        elapsed = 0
+        result = nil
+        phase = .idle
+    }
+
+    func clearHistory() {
+        history.removeAll()
+    }
+
+    // MARK: - Gesture Handlers
+
+    func onPressDown() {
+        switch triggerMode {
+        case .classic:
+            if phase == .idle || phase == .result {
+                startTimer()
+            } else if phase == .running {
+                stopTimer()
+            }
+        case .release:
+            if phase == .idle || phase == .result {
+                phase = .armed
+                result = nil
+                elapsed = 0
+                hapticImpact(.light)
+            } else if phase == .running {
+                stopTimer()
+            }
+        case .hold:
+            if phase == .idle || phase == .result {
+                startTimer()
+            }
+        }
+    }
+
+    func onPressUp() {
+        switch triggerMode {
+        case .classic:
+            break
+        case .release:
+            if phase == .armed {
+                startTimer()
+            }
+        case .hold:
+            if phase == .running {
+                stopTimer()
+            }
+        }
+    }
+
+    // MARK: - Haptics
+
+    private func hapticImpact(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
+    }
+}
