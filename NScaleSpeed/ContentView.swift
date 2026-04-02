@@ -61,7 +61,10 @@ struct ContentView: View {
                 HStack(spacing: 8) {
                     ForEach(vm.selectedScale.tracks) { track in
                         Button {
-                            if vm.canChangeSettings { vm.selectedTrack = track }
+                            if vm.canChangeSettings {
+                                vm.selectedTrack = track
+                                if vm.phase == .result { vm.reset() }
+                            }
                         } label: {
                             VStack(spacing: 2) {
                                 Text(track.label)
@@ -145,15 +148,15 @@ struct ContentView: View {
                             .font(.system(size: 48, weight: .light, design: .monospaced))
                             .tracking(2)
                             .foregroundColor(timerColor)
-                            .opacity(vm.phase == .running ? timerPulse : 1)
+                            .opacity(isPulsing ? 0.4 : 1.0)
                             .animation(
-                                vm.phase == .running
+                                isPulsing
                                     ? .easeInOut(duration: 0.5).repeatForever(autoreverses: true)
                                     : .default,
-                                value: vm.phase == .running
+                                value: isPulsing
                             )
                             .onChange(of: vm.phase) { _, newPhase in
-                                timerPulse = newPhase == .running ? 0.4 : 1.0
+                                isPulsing = newPhase == .running
                             }
                     }
 
@@ -214,7 +217,7 @@ struct ContentView: View {
                 }
 
                 // MARK: Footer
-                Text("Place your loco at one end of a Bachmann E-Z Track straight section. Time the train as it crosses from one end to the other.")
+                Text("Place your loco at one end of a straight track section. Press when the front crosses the start line and release when it crosses the end.")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Theme.textTertiary)
                     .multilineTextAlignment(.center)
@@ -238,7 +241,7 @@ struct ContentView: View {
         }
     }
 
-    @State private var timerPulse: Double = 1.0
+    @State private var isPulsing: Bool = false
 }
 
 // MARK: - Timer Button
