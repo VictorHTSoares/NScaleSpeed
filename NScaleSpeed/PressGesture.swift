@@ -16,9 +16,15 @@ struct PressGestureModifier: ViewModifier {
                             onDown()
                         }
                     }
-                    .onEnded { _ in
+                    .onEnded { value in
+                        let dx = value.translation.width
+                        let dy = value.translation.height
+                        let distance = sqrt(dx * dx + dy * dy)
                         hasFired = false
-                        onUp()
+                        if distance < 20 {
+                            onUp()
+                        }
+                        // else: large drag — treat as accidental/system cancellation, ignore
                     }
             )
     }
