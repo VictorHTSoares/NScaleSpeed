@@ -12,6 +12,14 @@ class SpeedViewModel: ObservableObject {
 
     private var startTime: Date?
     private var displayLink: CADisplayLink?
+    private let historyKey = "speedHistory"
+
+    init() {
+        if let data = UserDefaults.standard.data(forKey: historyKey),
+           let saved = try? JSONDecoder().decode([SpeedResult].self, from: data) {
+            history = saved
+        }
+    }
 
     var canChangeSettings: Bool {
         phase == .idle || phase == .result
@@ -59,6 +67,13 @@ class SpeedViewModel: ObservableObject {
         result = r
         history.insert(r, at: 0)
         if history.count > 10 { history = Array(history.prefix(10)) }
+        saveHistory()
+    }
+
+    private func saveHistory() {
+        if let data = try? JSONEncoder().encode(history) {
+            UserDefaults.standard.set(data, forKey: historyKey)
+        }
     }
 
     // MARK: - Public Actions
@@ -74,6 +89,7 @@ class SpeedViewModel: ObservableObject {
 
     func clearHistory() {
         history.removeAll()
+        UserDefaults.standard.removeObject(forKey: historyKey)
     }
 
     // MARK: - Gesture Handlers

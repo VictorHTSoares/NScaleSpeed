@@ -79,8 +79,8 @@ enum TimerPhase {
 
 // MARK: - Speed Result
 
-struct SpeedResult: Identifiable {
-    let id = UUID()
+struct SpeedResult: Identifiable, Codable {
+    let id: UUID
     let elapsed: TimeInterval // seconds
     let modelSpeed_mps: Double
     let scaleSpeed_kph: Double
@@ -115,6 +115,7 @@ func computeResult(elapsed: TimeInterval, trackMM: Double, scaleRatio: Double) -
     let scaleSpeed_kph = modelSpeed_mps * 3.6
 
     return SpeedResult(
+        id: UUID(),
         elapsed: elapsed,
         modelSpeed_mps: modelSpeed_mps,
         scaleSpeed_kph: scaleSpeed_kph,
