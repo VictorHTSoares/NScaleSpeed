@@ -21,7 +21,7 @@ struct HistoryList: View {
             VStack(spacing: 0) {
                 ForEach(Array(history.enumerated()), id: \.element.id) { index, run in
                     let runNumber = history.count - index
-                    let opacity = index == 0 ? 1.0 : 0.5 + 0.5 * (1.0 - Double(index) / Double(history.count))
+                    let opacity = 1.0 - (Double(index) / Double(max(history.count - 1, 1))) * 0.8
 
                     HStack {
                         Text("#\(runNumber)")
