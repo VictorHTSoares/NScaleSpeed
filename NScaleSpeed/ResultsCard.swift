@@ -33,6 +33,8 @@ struct ResultsCard: View {
             .padding(.vertical, 20)
             .frame(maxWidth: .infinity)
             .overlay(alignment: .bottom) { Divider().background(Theme.border) }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Real-world equivalent speed: \(String(format: "%.1f", result.realSpeed_kph)) kilometres per hour, \(String(format: "%.1f", result.realSpeed_mph)) miles per hour")
 
             // Detail rows
             DetailRow(label: "Model speed (m/s)", value: String(format: "%.4f m/s", result.modelSpeed_mps))

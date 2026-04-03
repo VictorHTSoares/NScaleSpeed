@@ -52,6 +52,8 @@ struct ContentView: View {
                         .foregroundColor(vm.selectedScale.id == scale.id ? Theme.gold : Theme.textTertiary)
                         .opacity(!vm.canChangeSettings && vm.selectedScale.id != scale.id ? 0.3 : 1)
                         .disabled(!vm.canChangeSettings)
+                        .accessibilityLabel("Scale: \(scale.label)")
+                        .accessibilityAddTraits(vm.selectedScale.id == scale.id ? .isSelected : [])
                     }
                 }
                 .padding(.horizontal, 20)
@@ -88,6 +90,8 @@ struct ContentView: View {
                         .foregroundColor(vm.selectedTrack.id == track.id ? Theme.gold : Theme.textTertiary)
                         .opacity(!vm.canChangeSettings && vm.selectedTrack.id != track.id ? 0.3 : 1)
                         .disabled(!vm.canChangeSettings)
+                        .accessibilityLabel("Track length: \(track.label)")
+                        .accessibilityAddTraits(vm.selectedTrack.id == track.id ? .isSelected : [])
                     }
                 }
                 .padding(.horizontal, 20)
@@ -164,6 +168,7 @@ struct ContentView: View {
                         .font(.system(size: 10, design: .monospaced))
                         .tracking(2)
                         .foregroundColor(Theme.textTertiary)
+                        .accessibilityHidden(true)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
@@ -189,6 +194,8 @@ struct ContentView: View {
                                         .stroke(Theme.border, lineWidth: 1)
                                 )
                         }
+                        .accessibilityLabel("Reset")
+                        .accessibilityHint("Clears the result and returns to idle")
                     }
                 }
                 .padding(.horizontal, 20)
@@ -274,6 +281,25 @@ struct TimerButton: View {
                 }
             )
             .animation(.easeInOut(duration: 0.1), value: isPressed)
+            .accessibilityLabel(a11yLabel)
+            .accessibilityHint(a11yHint)
+    }
+
+    private var a11yLabel: String {
+        switch vm.phase {
+        case .idle: return "Start timer"
+        case .armed: return "Release to start"
+        case .running: return "Stop timer"
+        case .result: return "Measure again"
+        }
+    }
+
+    private var a11yHint: String {
+        switch vm.triggerMode {
+        case .classic: return vm.phase == .running ? "Tap to stop" : "Tap to start"
+        case .release: return vm.phase == .armed ? "Lift finger to start timing" : "Press and hold to arm"
+        case .hold: return vm.phase == .running ? "Release to stop timing" : "Press and hold to time"
+        }
     }
 
     private var buttonLabel: String {
