@@ -21,7 +21,7 @@ struct HistoryList: View {
             VStack(spacing: 0) {
                 ForEach(Array(history.enumerated()), id: \.element.id) { index, run in
                     let runNumber = history.count - index
-                    let opacity = index == 0 ? 1.0 : 0.5 + 0.5 * (1.0 - Double(index) / Double(history.count))
+                    let opacity = 1.0 - (Double(index) / Double(max(history.count - 1, 1))) * 0.8
 
                     HStack {
                         Text("#\(runNumber)")
@@ -45,6 +45,8 @@ struct HistoryList: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .opacity(opacity)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Run \(runNumber): \(formatTime(run.elapsed)), \(String(format: "%.1f", run.realSpeed_kph)) km/h, \(String(format: "%.1f", run.realSpeed_mph)) mph")
                     .overlay(alignment: .bottom) {
                         if index < history.count - 1 {
                             Divider().background(Theme.borderSubtle)

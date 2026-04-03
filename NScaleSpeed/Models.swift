@@ -79,8 +79,8 @@ enum TimerPhase {
 
 // MARK: - Speed Result
 
-struct SpeedResult: Identifiable {
-    let id = UUID()
+struct SpeedResult: Identifiable, Codable {
+    let id: UUID
     let elapsed: TimeInterval // seconds
     let modelSpeed_mps: Double
     let scaleSpeed_kph: Double
@@ -89,6 +89,7 @@ struct SpeedResult: Identifiable {
     let realSpeed_mps: Double
     let trackMM: Double
     let trackRealM: Double
+    let scaleLabel: String
 }
 
 // MARK: - Helpers
@@ -106,7 +107,7 @@ func formatTime(_ seconds: TimeInterval) -> String {
     }
 }
 
-func computeResult(elapsed: TimeInterval, trackMM: Double, scaleRatio: Double) -> SpeedResult {
+func computeResult(elapsed: TimeInterval, trackMM: Double, scaleRatio: Double, scaleLabel: String) -> SpeedResult {
     let trackRealM = (trackMM / 1000.0) * scaleRatio
     let modelSpeed_mps = (trackMM / 1000.0) / elapsed
     let realSpeed_mps = trackRealM / elapsed
@@ -115,6 +116,7 @@ func computeResult(elapsed: TimeInterval, trackMM: Double, scaleRatio: Double) -
     let scaleSpeed_kph = modelSpeed_mps * 3.6
 
     return SpeedResult(
+        id: UUID(),
         elapsed: elapsed,
         modelSpeed_mps: modelSpeed_mps,
         scaleSpeed_kph: scaleSpeed_kph,
@@ -122,6 +124,7 @@ func computeResult(elapsed: TimeInterval, trackMM: Double, scaleRatio: Double) -
         realSpeed_mph: realSpeed_mph,
         realSpeed_mps: realSpeed_mps,
         trackMM: trackMM,
-        trackRealM: trackRealM
+        trackRealM: trackRealM,
+        scaleLabel: scaleLabel
     )
 }

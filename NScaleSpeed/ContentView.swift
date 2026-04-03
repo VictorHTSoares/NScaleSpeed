@@ -52,6 +52,8 @@ struct ContentView: View {
                         .foregroundColor(vm.selectedScale.id == scale.id ? Theme.gold : Theme.textTertiary)
                         .opacity(!vm.canChangeSettings && vm.selectedScale.id != scale.id ? 0.3 : 1)
                         .disabled(!vm.canChangeSettings)
+                        .accessibilityLabel("Scale: \(scale.label)")
+                        .accessibilityAddTraits(vm.selectedScale.id == scale.id ? .isSelected : [])
                     }
                 }
                 .padding(.horizontal, 20)
@@ -61,7 +63,10 @@ struct ContentView: View {
                 HStack(spacing: 8) {
                     ForEach(vm.selectedScale.tracks) { track in
                         Button {
-                            if vm.canChangeSettings { vm.selectedTrack = track }
+                            if vm.canChangeSettings {
+                                vm.selectedTrack = track
+                                if vm.phase == .result { vm.reset() }
+                            }
                         } label: {
                             VStack(spacing: 2) {
                                 Text(track.label)
@@ -85,6 +90,8 @@ struct ContentView: View {
                         .foregroundColor(vm.selectedTrack.id == track.id ? Theme.gold : Theme.textTertiary)
                         .opacity(!vm.canChangeSettings && vm.selectedTrack.id != track.id ? 0.3 : 1)
                         .disabled(!vm.canChangeSettings)
+                        .accessibilityLabel("Track length: \(track.label)")
+                        .accessibilityAddTraits(vm.selectedTrack.id == track.id ? .isSelected : [])
                     }
                 }
                 .padding(.horizontal, 20)
@@ -129,7 +136,7 @@ struct ContentView: View {
                 .padding(.bottom, 24)
 
                 // MARK: Track Visual
-                TrackVisualization(phase: vm.phase, modeColor: Theme.modeColor(vm.triggerMode))
+                TrackVisualization(phase: vm.phase, modeColor: Theme.modeColor(vm.triggerMode), animationDuration: max(vm.selectedTrack.mm / 50.0, 0.5))
                     .padding(.horizontal, 20)
                     .padding(.bottom, 28)
 
@@ -145,15 +152,15 @@ struct ContentView: View {
                             .font(.system(size: 48, weight: .light, design: .monospaced))
                             .tracking(2)
                             .foregroundColor(timerColor)
-                            .opacity(vm.phase == .running ? timerPulse : 1)
+                            .opacity(isPulsing ? 0.4 : 1.0)
                             .animation(
-                                vm.phase == .running
+                                isPulsing
                                     ? .easeInOut(duration: 0.5).repeatForever(autoreverses: true)
                                     : .default,
-                                value: vm.phase == .running
+                                value: isPulsing
                             )
                             .onChange(of: vm.phase) { _, newPhase in
-                                timerPulse = newPhase == .running ? 0.4 : 1.0
+                                isPulsing = newPhase == .running
                             }
                     }
 
@@ -161,6 +168,7 @@ struct ContentView: View {
                         .font(.system(size: 10, design: .monospaced))
                         .tracking(2)
                         .foregroundColor(Theme.textTertiary)
+                        .accessibilityHidden(true)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
@@ -186,6 +194,8 @@ struct ContentView: View {
                                         .stroke(Theme.border, lineWidth: 1)
                                 )
                         }
+                        .accessibilityLabel("Reset")
+                        .accessibilityHint("Clears the result and returns to idle")
                     }
                 }
                 .padding(.horizontal, 20)
@@ -214,7 +224,7 @@ struct ContentView: View {
                 }
 
                 // MARK: Footer
-                Text("Place your loco at one end of a Bachmann E-Z Track straight section. Time the train as it crosses from one end to the other.")
+                Text("Place your loco at one end of a straight track section. Press when the front crosses the start line and release when it crosses the end.")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Theme.textTertiary)
                     .multilineTextAlignment(.center)
@@ -238,7 +248,7 @@ struct ContentView: View {
         }
     }
 
-    @State private var timerPulse: Double = 1.0
+    @State private var isPulsing: Bool = false
 }
 
 // MARK: - Timer Button
@@ -271,6 +281,25 @@ struct TimerButton: View {
                 }
             )
             .animation(.easeInOut(duration: 0.1), value: isPressed)
+            .accessibilityLabel(a11yLabel)
+            .accessibilityHint(a11yHint)
+    }
+
+    private var a11yLabel: String {
+        switch vm.phase {
+        case .idle: return "Start timer"
+        case .armed: return "Release to start"
+        case .running: return "Stop timer"
+        case .result: return "Measure again"
+        }
+    }
+
+    private var a11yHint: String {
+        switch vm.triggerMode {
+        case .classic: return vm.phase == .running ? "Tap to stop" : "Tap to start"
+        case .release: return vm.phase == .armed ? "Lift finger to start timing" : "Press and hold to arm"
+        case .hold: return vm.phase == .running ? "Release to stop timing" : "Press and hold to time"
+        }
     }
 
     private var buttonLabel: String {

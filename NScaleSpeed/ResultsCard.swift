@@ -33,14 +33,16 @@ struct ResultsCard: View {
             .padding(.vertical, 20)
             .frame(maxWidth: .infinity)
             .overlay(alignment: .bottom) { Divider().background(Theme.border) }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Real-world equivalent speed: \(String(format: "%.1f", result.realSpeed_kph)) kilometres per hour, \(String(format: "%.1f", result.realSpeed_mph)) miles per hour")
 
             // Detail rows
-            DetailRow(label: "Model speed", value: String(format: "%.4f m/s", result.modelSpeed_mps))
-            DetailRow(label: "Model speed", value: String(format: "%.2f km/h", result.scaleSpeed_kph))
+            DetailRow(label: "Model speed (m/s)", value: String(format: "%.4f m/s", result.modelSpeed_mps))
+            DetailRow(label: "Model speed (km/h)", value: String(format: "%.2f km/h", result.scaleSpeed_kph))
             DetailRow(label: "Real speed", value: String(format: "%.2f m/s", result.realSpeed_mps))
             DetailRow(label: "Track (model)", value: String(format: "%.0f mm", result.trackMM))
             DetailRow(label: "Track (real)", value: String(format: "%.1f m", result.trackRealM))
-            DetailRow(label: "Scale ratio", value: "1:160", isLast: true)
+            DetailRow(label: "Scale ratio", value: result.scaleLabel, isLast: true)
         }
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 8))
