@@ -45,6 +45,8 @@ struct HistoryList: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .opacity(opacity)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Run \(runNumber): \(formatTime(run.elapsed)), \(String(format: "%.1f", run.realSpeed_kph)) km/h, \(String(format: "%.1f", run.realSpeed_mph)) mph")
                     .overlay(alignment: .bottom) {
                         if index < history.count - 1 {
                             Divider().background(Theme.borderSubtle)
