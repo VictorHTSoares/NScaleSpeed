@@ -15,18 +15,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
       - name: Install xcpretty
         run: gem install xcpretty --no-document
+
+      - name: Show environment
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available | grep -i iphone | head -10
 
       - name: Build
         run: |
           xcodebuild build \
             -project NScaleSpeed.xcodeproj \
             -scheme NScaleSpeed \
-            -destination 'platform=macOS,variant=Designed for iPad' \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
           | xcpretty && exit ${PIPESTATUS[0]}
@@ -36,7 +38,7 @@ jobs:
           xcodebuild test \
             -project NScaleSpeed.xcodeproj \
             -scheme NScaleSpeed \
-            -destination 'platform=macOS,variant=Designed for iPad' \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
             -only-testing NScaleSpeedTests \
             CODE_SIGNING_ALLOWED=NO \
           | xcpretty --report junit --output test-results.xml && exit ${PIPESTATUS[0]}
