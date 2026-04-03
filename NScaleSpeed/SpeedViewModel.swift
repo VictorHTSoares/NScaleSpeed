@@ -68,7 +68,7 @@ class SpeedViewModel: ObservableObject {
         phase = .result
         hapticImpact(.heavy)
 
-        let r = computeResult(elapsed: final, trackMM: selectedTrack.mm, scaleRatio: selectedScale.ratio)
+        let r = computeResult(elapsed: final, trackMM: selectedTrack.mm, scaleRatio: selectedScale.ratio, scaleLabel: "1:\(Int(selectedScale.ratio))")
         result = r
         history.insert(r, at: 0)
         if history.count > 10 { history = Array(history.prefix(10)) }
