@@ -26,7 +26,7 @@ jobs:
           xcodebuild build \
             -project NScaleSpeed.xcodeproj \
             -scheme NScaleSpeed \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination 'platform=macOS,variant=Designed for iPad' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
           | xcpretty && exit ${PIPESTATUS[0]}
@@ -36,7 +36,7 @@ jobs:
           xcodebuild test \
             -project NScaleSpeed.xcodeproj \
             -scheme NScaleSpeed \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination 'platform=macOS,variant=Designed for iPad' \
             -only-testing NScaleSpeedTests \
             CODE_SIGNING_ALLOWED=NO \
           | xcpretty --report junit --output test-results.xml && exit ${PIPESTATUS[0]}
