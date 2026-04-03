@@ -3,6 +3,7 @@ import SwiftUI
 struct TrackVisualization: View {
     let phase: TimerPhase
     let modeColor: Color
+    var animationDuration: Double = 2.0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -58,7 +59,7 @@ struct TrackVisualization: View {
 
                     // Train indicator
                     if phase == .running {
-                        TrainDot(color: modeColor, trackWidth: w)
+                        TrainDot(color: modeColor, trackWidth: w, duration: animationDuration)
                     }
                 }
             }
@@ -70,6 +71,7 @@ struct TrackVisualization: View {
 struct TrainDot: View {
     let color: Color
     let trackWidth: CGFloat
+    var duration: Double = 2.0
     @State private var atEnd = false
 
     var body: some View {
@@ -79,7 +81,7 @@ struct TrainDot: View {
             .shadow(color: color.opacity(0.5), radius: 6)
             .offset(x: atEnd ? (trackWidth / 2 - 20) : (-trackWidth / 2 + 8))
             .onAppear {
-                withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
+                withAnimation(.easeInOut(duration: duration).repeatForever(autoreverses: true)) {
                     atEnd = true
                 }
             }

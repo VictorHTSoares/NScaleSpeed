@@ -132,7 +132,7 @@ struct ContentView: View {
                 .padding(.bottom, 24)
 
                 // MARK: Track Visual
-                TrackVisualization(phase: vm.phase, modeColor: Theme.modeColor(vm.triggerMode))
+                TrackVisualization(phase: vm.phase, modeColor: Theme.modeColor(vm.triggerMode), animationDuration: max(vm.selectedTrack.mm / 50.0, 0.5))
                     .padding(.horizontal, 20)
                     .padding(.bottom, 28)
 
