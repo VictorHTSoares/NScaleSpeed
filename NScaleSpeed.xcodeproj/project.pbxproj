@@ -17,7 +17,18 @@
 		A10000010000000000000008 /* HistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000020000000000000008; };
 		A10000010000000000000009 /* PressGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000020000000000000009; };
 		A10000010000000000000010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000020000000000000010; };
+		A10000010000000000000011 /* NScaleSpeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000020000000000000011; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A100000C0000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000090000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000060000000000000001;
+			remoteInfo = NScaleSpeed;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A10000020000000000000001 /* NScaleSpeedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NScaleSpeedApp.swift; sourceTree = "<group>"; };
@@ -30,11 +41,20 @@
 		A10000020000000000000008 /* HistoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryList.swift; sourceTree = "<group>"; };
 		A10000020000000000000009 /* PressGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressGesture.swift; sourceTree = "<group>"; };
 		A10000020000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A10000020000000000000011 /* NScaleSpeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NScaleSpeedTests.swift; sourceTree = "<group>"; };
 		A10000030000000000000001 /* NScaleSpeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NScaleSpeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000030000000000000002 /* NScaleSpeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NScaleSpeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A10000040000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000040000000000000002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -48,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				A10000050000000000000002 /* NScaleSpeed */,
+				A10000050000000000000004 /* NScaleSpeedTests */,
 				A10000050000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,8 +94,17 @@
 			isa = PBXGroup;
 			children = (
 				A10000030000000000000001 /* NScaleSpeed.app */,
+				A10000030000000000000002 /* NScaleSpeedTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A10000050000000000000004 /* NScaleSpeedTests */ = {
+			isa = PBXGroup;
+			children = (
+				A10000020000000000000011 /* NScaleSpeedTests.swift */,
+			);
+			path = NScaleSpeedTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -97,6 +127,23 @@
 			productReference = A10000030000000000000001 /* NScaleSpeed.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A10000060000000000000002 /* NScaleSpeedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000080000000000000003 /* Build configuration list for PBXNativeTarget "NScaleSpeedTests" */;
+			buildPhases = (
+				A10000070000000000000003 /* Sources */,
+				A10000040000000000000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A100000B0000000000000001 /* PBXTargetDependency */,
+			);
+			name = NScaleSpeedTests;
+			productName = NScaleSpeedTests;
+			productReference = A10000030000000000000002 /* NScaleSpeedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -109,6 +156,10 @@
 				TargetAttributes = {
 					A10000060000000000000001 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					A10000060000000000000002 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A10000060000000000000001;
 					};
 				};
 			};
@@ -126,6 +177,7 @@
 			projectRoot = "";
 			targets = (
 				A10000060000000000000001 /* NScaleSpeed */,
+				A10000060000000000000002 /* NScaleSpeedTests */,
 			);
 		};
 /* End PBXProject section */
@@ -158,7 +210,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000070000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000010000000000000011 /* NScaleSpeedTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A100000B0000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000060000000000000001 /* NScaleSpeed */;
+			targetProxy = A100000C0000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A100000A0000000000000001 /* Debug */ = {
@@ -280,6 +348,44 @@
 			};
 			name = Release;
 		};
+		A100000A0000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nscalespeed.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NScaleSpeed.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NScaleSpeed";
+			};
+			name = Debug;
+		};
+		A100000A0000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nscalespeed.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NScaleSpeed.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NScaleSpeed";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -297,6 +403,15 @@
 			buildConfigurations = (
 				A100000A0000000000000001 /* Debug */,
 				A100000A0000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000080000000000000003 /* Build configuration list for PBXNativeTarget "NScaleSpeedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000A0000000000000005 /* Debug */,
+				A100000A0000000000000006 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
