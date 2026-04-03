@@ -19,9 +19,11 @@ class SpeedViewModel: ObservableObject {
     private var startTime: Date?
     private var displayLink: CADisplayLink?
     private let historyKey = "speedHistory"
+    private let historyStore: UserDefaults
 
-    init() {
-        if let data = UserDefaults.standard.data(forKey: historyKey),
+    init(historyStore: UserDefaults = .standard) {
+        self.historyStore = historyStore
+        if let data = historyStore.data(forKey: historyKey),
            let saved = try? JSONDecoder().decode([SpeedResult].self, from: data) {
             history = saved
         }
@@ -83,11 +85,14 @@ class SpeedViewModel: ObservableObject {
         saveHistory()
     }
 
-    private func saveHistory() {
+    func saveHistory() {
         if let data = try? JSONEncoder().encode(history) {
-            UserDefaults.standard.set(data, forKey: historyKey)
+            historyStore.set(data, forKey: historyKey)
         }
     }
+
+    // Alias for test readability
+    func saveHistoryForTesting() { saveHistory() }
 
     // MARK: - Public Actions
 
@@ -102,7 +107,7 @@ class SpeedViewModel: ObservableObject {
 
     func clearHistory() {
         history.removeAll()
-        UserDefaults.standard.removeObject(forKey: historyKey)
+        historyStore.removeObject(forKey: historyKey)
     }
 
     // MARK: - Gesture Handlers

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  build-and-test:
+    name: Build & Unit Tests
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install xcpretty
+        run: gem install xcpretty --no-document
+
+      - name: Build
+        run: |
+          xcodebuild build \
+            -project NScaleSpeed.xcodeproj \
+            -scheme NScaleSpeed \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+          | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -project NScaleSpeed.xcodeproj \
+            -scheme NScaleSpeed \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -only-testing NScaleSpeedTests \
+            CODE_SIGNING_ALLOWED=NO \
+          | xcpretty --report junit --output test-results.xml && exit ${PIPESTATUS[0]}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results.xml
